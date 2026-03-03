@@ -32,9 +32,15 @@ export interface HistoryRecord {
   task_id: string;
   mode: string;
   prompt: string;
+  image_url?: string | null;
+  end_image_url?: string | null;
   aspect_ratio: string;
   resolution: string;
   duration: number;
+  camera_fixed?: boolean;
+  seed?: number;
+  generate_audio?: boolean;
+  enable_safety_checker?: boolean;
   local_path?: string;
   created_at: string;
 }

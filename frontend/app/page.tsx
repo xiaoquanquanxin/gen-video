@@ -74,6 +74,14 @@ export default function Home() {
       loadSessionHistory();
       setSelectedVideo(null);
       setError(null);
+
+      // 恢复未完成任务的轮询
+      const session = sessions.find(s => s.id === activeSessionId);
+      if (session?.currentTask && 
+          (session.currentTask.status === 'IN_QUEUE' || session.currentTask.status === 'IN_PROGRESS')) {
+        setIsGenerating(true);
+        startPolling(session.currentTask.id);
+      }
     }
   }, [activeSessionId, loadSessionHistory]);
 
@@ -215,6 +223,22 @@ export default function Home() {
         duration: record.duration,
       });
     }
+
+    // 回填表单参数
+    const restoredForm: FormState = {
+      mode: (record.mode as FormState['mode']) || 'text-to-video',
+      prompt: record.prompt || '',
+      imageUrl: record.image_url || null,
+      endImageUrl: record.end_image_url || null,
+      aspectRatio: (record.aspect_ratio as FormState['aspectRatio']) || '16:9',
+      resolution: (record.resolution as FormState['resolution']) || '720p',
+      duration: record.duration || 5,
+      cameraFixed: record.camera_fixed ?? false,
+      seed: record.seed ?? -1,
+      generateAudio: record.generate_audio ?? false,
+      enableSafetyChecker: record.enable_safety_checker ?? false,
+    };
+    updateSession({ formState: restoredForm });
   };
 
   return (

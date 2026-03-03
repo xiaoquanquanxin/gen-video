@@ -68,9 +68,15 @@ async def generate_video(request: GenerateRequest):
             "task_id": result["task_id"],
             "mode": request.mode,
             "prompt": request.prompt,
+            "image_url": request.image_url,
+            "end_image_url": request.end_image_url,
             "aspect_ratio": request.aspect_ratio,
             "resolution": request.resolution,
             "duration": request.duration,
+            "camera_fixed": request.camera_fixed,
+            "seed": request.seed,
+            "generate_audio": request.generate_audio,
+            "enable_safety_checker": request.enable_safety_checker,
             "status": "pending",
             "local_path": None
         })

@@ -1,4 +1,5 @@
 import os
+import base64
 import httpx
 from typing import Optional, Literal
 from dataclasses import dataclass
@@ -21,8 +22,8 @@ class VideoGenerator:
     """火山引擎方舟 Seedance 视频生成服务"""
     
     # Seedance 模型 ID（根据火山引擎方舟文档）
-    TEXT_TO_VIDEO_MODEL = "doubao-seedance-1-0-lite-t2v"
-    IMAGE_TO_VIDEO_MODEL = "doubao-seedance-1-0-lite-i2v"
+    TEXT_TO_VIDEO_MODEL = "doubao-seedance-1-5-pro-251215"
+    IMAGE_TO_VIDEO_MODEL = "doubao-seedance-1-5-pro-251215"
     
     def __init__(self):
         self.api_key = os.environ.get("ARK_API_KEY")
@@ -38,6 +39,23 @@ class VideoGenerator:
             "Authorization": f"Bearer {self.api_key}"
         }
     
+    def _to_data_url(self, image_url: str) -> str:
+        """将本地图片 URL 转为 base64 data URL"""
+        if image_url.startswith("data:"):
+            return image_url
+        # 本地上传的图片，从文件系统读取
+        if "localhost" in image_url or "127.0.0.1" in image_url:
+            # 从 URL 提取文件名: http://localhost:8000/uploads/xxx.jpg -> ../uploads/xxx.jpg
+            filename = image_url.split("/uploads/")[-1]
+            filepath = os.path.join("../uploads", filename)
+            if os.path.exists(filepath):
+                with open(filepath, "rb") as f:
+                    data = base64.b64encode(f.read()).decode()
+                ext = filename.rsplit(".", 1)[-1].lower()
+                mime = {"jpg": "image/jpeg", "jpeg": "image/jpeg", "png": "image/png", "webp": "image/webp"}.get(ext, "image/jpeg")
+                return f"data:{mime};base64,{data}"
+        return image_url
+
     def _build_content(self, params: GenerationParams) -> list:
         """构建请求内容"""
         content = []
@@ -53,6 +71,8 @@ class VideoGenerator:
             param_parts.append(f"--seed {params.seed}")
         if params.generate_audio:
             param_parts.append("--generate_audio true")
+        else:
+            param_parts.append("--generate_audio false")
         if not params.enable_safety_checker:
             param_parts.append("--enable_safety_checker false")
         
@@ -67,14 +87,14 @@ class VideoGenerator:
         if params.mode == 'image-to-video' and params.image_url:
             content.append({
                 "type": "image_url",
-                "image_url": {"url": params.image_url}
+                "image_url": {"url": self._to_data_url(params.image_url)}
             })
         
         # 添加尾帧图片（如果有）
         if params.end_image_url:
             content.append({
                 "type": "image_url", 
-                "image_url": {"url": params.end_image_url}
+                "image_url": {"url": self._to_data_url(params.end_image_url)}
             })
         
         return content
