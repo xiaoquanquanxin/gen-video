@@ -48,7 +48,7 @@ export default function VideoPlayer({ src, resolution, duration }: VideoPlayerPr
     <div className="bg-black rounded-lg overflow-hidden">
       {isLoading && (
         <div className="absolute inset-0 flex items-center justify-center bg-gray-900">
-          <span className="text-white">加载中...</span>
+          <span className="text-white text-xs">加载中...</span>
         </div>
       )}
       <video
@@ -60,9 +60,9 @@ export default function VideoPlayer({ src, resolution, duration }: VideoPlayerPr
         onLoadedData={handleLoadedData}
       />
       {(resolution || duration) && (
-        <div className="bg-gray-900 px-4 py-2 flex gap-4 text-sm text-gray-400">
-          {resolution && <span>分辨率: {resolution}</span>}
-          {duration && <span>时长: {duration}秒</span>}
+        <div className="bg-gray-900 px-2 py-1 flex gap-3 text-xs text-gray-400">
+          {resolution && <span>{resolution}</span>}
+          {duration && <span>{duration}s</span>}
         </div>
       )}
     </div>

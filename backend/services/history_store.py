@@ -49,6 +49,16 @@ class HistoryStore:
             if record.get('task_id') == task_id:
                 return record
         return None
+    async def update_record(self, task_id: str, updates: dict) -> bool:
+        """更新指定 task_id 的记录"""
+        records = await self.get_records()
+        for record in records:
+            if record.get('task_id') == task_id:
+                record.update(updates)
+                async with aiofiles.open(self.history_file, 'w', encoding='utf-8') as f:
+                    await f.write(json.dumps({"records": records}, ensure_ascii=False, indent=2))
+                return True
+        return False
 
 # 单例实例
 history_store = HistoryStore()

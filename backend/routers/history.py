@@ -9,6 +9,9 @@ router = APIRouter()
 class HistoryRecord(BaseModel):
     task_id: str
     mode: str
+    theme: Optional[str] = None
+    shot: Optional[str] = None
+    description: Optional[str] = None
     prompt: str
     image_url: Optional[str] = None
     end_image_url: Optional[str] = None
@@ -31,11 +34,14 @@ async def get_history():
     """获取历史记录"""
     records = await history_store.get_records()
     
-    # 只返回已完成的记录
-    completed_records = [
+    # 返回所有记录（包括未完成的，前端需要恢复轮询）
+    all_records = [
         HistoryRecord(
             task_id=r.get("task_id", ""),
             mode=r.get("mode", ""),
+            theme=r.get("theme"),
+            shot=r.get("shot"),
+            description=r.get("description"),
             prompt=r.get("prompt", ""),
             image_url=r.get("image_url"),
             end_image_url=r.get("end_image_url"),
@@ -51,7 +57,6 @@ async def get_history():
             status=r.get("status")
         )
         for r in records
-        if r.get("status") == "completed" and r.get("local_path")
     ]
     
-    return HistoryResponse(records=completed_records)
+    return HistoryResponse(records=all_records)

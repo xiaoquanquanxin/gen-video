@@ -26,6 +26,7 @@ function truncatePrompt(prompt: string, maxLength: number = 40): string {
 export default function HistoryList({ records, onSelect }: HistoryListProps) {
   const [themeFilter, setThemeFilter] = useState('');
   const [shotFilter, setShotFilter] = useState('');
+  const [descFilter, setDescFilter] = useState('');
 
   // 获取所有主题和分镜选项
   const themes = useMemo(() => {
@@ -46,9 +47,10 @@ export default function HistoryList({ records, onSelect }: HistoryListProps) {
     return records.filter(r => {
       if (themeFilter && r.theme !== themeFilter) return false;
       if (shotFilter && r.shot !== shotFilter) return false;
+      if (descFilter && !(r.description || '').includes(descFilter)) return false;
       return true;
     });
-  }, [records, themeFilter, shotFilter]);
+  }, [records, themeFilter, shotFilter, descFilter]);
 
   if (records.length === 0) {
     return (
@@ -59,14 +61,14 @@ export default function HistoryList({ records, onSelect }: HistoryListProps) {
   }
 
   return (
-    <div className="bg-white rounded-lg shadow">
+    <div className="bg-white rounded-lg shadow h-full flex flex-col">
       <div className="px-3 py-2 border-b border-gray-200">
         <h3 className="font-medium text-gray-700 text-sm mb-2">历史记录</h3>
-        <div className="flex gap-2">
+        <div className="flex flex-col gap-2">
           <select
             value={themeFilter}
             onChange={(e) => { setThemeFilter(e.target.value); setShotFilter(''); }}
-            className="flex-1 px-2 py-1 border border-gray-300 rounded text-xs"
+            className="w-full px-2 py-1 border border-gray-300 rounded text-xs"
           >
             <option value="">全部主题</option>
             {themes.map(t => <option key={t} value={t}>{t}</option>)}
@@ -74,14 +76,21 @@ export default function HistoryList({ records, onSelect }: HistoryListProps) {
           <select
             value={shotFilter}
             onChange={(e) => setShotFilter(e.target.value)}
-            className="flex-1 px-2 py-1 border border-gray-300 rounded text-xs"
+            className="w-full px-2 py-1 border border-gray-300 rounded text-xs"
           >
             <option value="">全部分镜</option>
             {shots.map(s => <option key={s} value={s}>{s}</option>)}
           </select>
+          <input
+            type="text"
+            value={descFilter}
+            onChange={(e) => setDescFilter(e.target.value)}
+            placeholder="搜索修改说明..."
+            className="w-full px-2 py-1 border border-gray-300 rounded text-xs"
+          />
         </div>
       </div>
-      <div className="divide-y divide-gray-100 max-h-80 overflow-y-auto">
+      <div className="divide-y divide-gray-100 flex-1 overflow-y-auto">
         {filteredRecords.length === 0 ? (
           <p className="text-gray-400 text-xs text-center py-4">无匹配记录</p>
         ) : (
@@ -120,9 +129,6 @@ export default function HistoryList({ records, onSelect }: HistoryListProps) {
                   {formatDate(record.created_at)}
                 </span>
               </div>
-              {record.description && (
-                <p className="text-xs text-gray-500 mb-0.5">{record.description}</p>
-              )}
               <p className="text-xs text-gray-600 line-clamp-1">
                 {truncatePrompt(record.prompt, 35)}
               </p>

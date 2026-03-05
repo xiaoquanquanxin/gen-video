@@ -179,9 +179,9 @@ export default function Home() {
         </div>
       </header>
 
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 py-4">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-          <div className="lg:col-span-2 space-y-4">
+      <main className="flex-1 w-full mx-auto px-4 py-4">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_400px_480px] gap-4">
+          <div className="space-y-4">
             <GenerationForm 
               onSubmit={handleSubmit} 
               isGenerating={isGenerating}
@@ -201,7 +201,13 @@ export default function Home() {
                 error={currentTask.error}
               />
             )}
-            
+          </div>
+
+          <div>
+            <HistoryList records={history} onSelect={handleSelectHistory} />
+          </div>
+
+          <div>
             {selectedVideo && (
               <VideoPlayer
                 src={selectedVideo.url}
@@ -209,10 +215,6 @@ export default function Home() {
                 duration={selectedVideo.duration}
               />
             )}
-          </div>
-
-          <div>
-            <HistoryList records={history} onSelect={handleSelectHistory} />
           </div>
         </div>
       </main>
