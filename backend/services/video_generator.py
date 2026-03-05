@@ -22,8 +22,8 @@ class VideoGenerator:
     """火山引擎方舟 Seedance 视频生成服务"""
     
     # Seedance 模型 ID（根据火山引擎方舟文档）
-    TEXT_TO_VIDEO_MODEL = "doubao-seedance-1-5-pro-251215"
-    IMAGE_TO_VIDEO_MODEL = "doubao-seedance-1-5-pro-251215"
+    TEXT_TO_VIDEO_MODEL = "doubao-seedance-1-0-pro-fast-251015"
+    IMAGE_TO_VIDEO_MODEL = "doubao-seedance-1-0-pro-fast-251015"
     
     def __init__(self):
         self.base_url = "https://ark.cn-beijing.volces.com/api/v3"

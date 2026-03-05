@@ -168,10 +168,12 @@ export default function GenerationForm({ onSubmit, isGenerating, initialState }:
         <div>
           <label className="block text-xs text-gray-600 mb-1">Seed</label>
           <input
-            type="number"
+            type="text"
             value={formState.seed}
-            onChange={(e) => updateField('seed', parseInt(e.target.value) || -1)}
-            min={-1}
+            onChange={(e) => {
+              const v = e.target.value.replace(/[^0-9-]/g, '');
+              updateField('seed', v === '' || v === '-' ? -1 : parseInt(v));
+            }}
             className="w-full px-2 py-1 border border-gray-300 rounded text-xs"
             placeholder="-1"
           />
