@@ -41,29 +41,46 @@ export default function HistoryList({ records, onSelect }: HistoryListProps) {
           <div
             key={record.task_id}
             onClick={() => onSelect(record)}
-            className="p-4 hover:bg-gray-50 cursor-pointer transition-colors"
+            className="p-3 hover:bg-gray-50 cursor-pointer transition-colors"
           >
             <div className="flex items-center justify-between mb-1">
-              <span className={`text-xs px-2 py-0.5 rounded ${
-                record.mode === 'text-to-video' 
-                  ? 'bg-blue-100 text-blue-700' 
-                  : 'bg-green-100 text-green-700'
-              }`}>
-                {record.mode === 'text-to-video' ? '文生视频' : '图生视频'}
-              </span>
+              <div className="flex items-center gap-2">
+                <span className={`text-xs px-1.5 py-0.5 rounded ${
+                  record.mode === 'text-to-video' 
+                    ? 'bg-blue-100 text-blue-700' 
+                    : 'bg-green-100 text-green-700'
+                }`}>
+                  {record.mode === 'text-to-video' ? '文' : '图'}
+                </span>
+                {record.status && record.status !== 'completed' && (
+                  <span className={`text-xs px-1.5 py-0.5 rounded ${
+                    record.status === 'pending' || record.status === 'running'
+                      ? 'bg-yellow-100 text-yellow-700'
+                      : 'bg-red-100 text-red-700'
+                  }`}>
+                    {record.status === 'pending' ? '排队中' : record.status === 'running' ? '生成中' : '失败'}
+                  </span>
+                )}
+                {record.title && (
+                  <span className="text-sm font-medium text-gray-800">{record.title}</span>
+                )}
+              </div>
               <span className="text-xs text-gray-400">
                 {formatDate(record.created_at)}
               </span>
             </div>
-            <p className="text-sm text-gray-600 line-clamp-2">
-              {truncatePrompt(record.prompt)}
+            {record.description && (
+              <p className="text-xs text-gray-500 mb-1">{record.description}</p>
+            )}
+            <p className="text-xs text-gray-600 line-clamp-2">
+              {truncatePrompt(record.prompt, 40)}
             </p>
-            <div className="flex gap-2 mt-1 text-xs text-gray-400">
+            <div className="flex gap-1 mt-1 text-xs text-gray-400">
               <span>{record.resolution}</span>
               <span>·</span>
               <span>{record.aspect_ratio}</span>
               <span>·</span>
-              <span>{record.duration}秒</span>
+              <span>{record.duration}s</span>
             </div>
           </div>
         ))}

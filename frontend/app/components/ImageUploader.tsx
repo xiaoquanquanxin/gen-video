@@ -87,12 +87,12 @@ export default function ImageUploader({ value, onChange }: ImageUploaderProps) {
         <img
           src={value}
           alt="已上传图片"
-          className="w-32 h-32 object-cover rounded-lg border border-gray-300"
+          className="w-20 h-20 object-cover rounded border border-gray-300"
         />
         <button
           type="button"
           onClick={handleDelete}
-          className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600"
+          className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 text-xs"
         >
           ×
         </button>
@@ -107,7 +107,7 @@ export default function ImageUploader({ value, onChange }: ImageUploaderProps) {
         onDrop={handleDrop}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
-        className={`w-full h-32 border-2 border-dashed rounded-lg flex flex-col items-center justify-center cursor-pointer transition-colors ${
+        className={`w-full h-20 border-2 border-dashed rounded flex flex-col items-center justify-center cursor-pointer transition-colors text-xs ${
           isDragging ? 'border-blue-500 bg-blue-50' : 'border-gray-300 hover:border-gray-400'
         }`}
       >
@@ -115,8 +115,8 @@ export default function ImageUploader({ value, onChange }: ImageUploaderProps) {
           <span className="text-gray-500">处理中...</span>
         ) : (
           <>
-            <span className="text-gray-500">点击或拖拽上传图片</span>
-            <span className="text-xs text-gray-400 mt-1">支持 JPEG、PNG、WebP，最大 10MB</span>
+            <span className="text-gray-500">点击上传</span>
+            <span className="text-gray-400 mt-0.5">≤10MB</span>
           </>
         )}
       </div>

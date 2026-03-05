@@ -10,11 +10,13 @@ router = APIRouter()
 
 class GenerateRequest(BaseModel):
     mode: Literal['text-to-video', 'image-to-video']
+    title: str = ""
+    description: str = ""
     prompt: str
     image_url: Optional[str] = None
     end_image_url: Optional[str] = None
     aspect_ratio: str = "16:9"
-    resolution: str = "720p"
+    resolution: str = "480p"
     duration: int = 5
     camera_fixed: bool = False
     seed: int = -1
@@ -67,6 +69,8 @@ async def generate_video(request: GenerateRequest):
         await history_store.add_record({
             "task_id": result["task_id"],
             "mode": request.mode,
+            "title": request.title,
+            "description": request.description,
             "prompt": request.prompt,
             "image_url": request.image_url,
             "end_image_url": request.end_image_url,

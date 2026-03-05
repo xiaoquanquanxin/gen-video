@@ -11,7 +11,7 @@ class GenerationParams:
     image_url: Optional[str] = None
     end_image_url: Optional[str] = None
     aspect_ratio: str = "16:9"
-    resolution: str = "720p"
+    resolution: str = "480p"
     duration: int = 5
     camera_fixed: bool = False
     seed: int = -1

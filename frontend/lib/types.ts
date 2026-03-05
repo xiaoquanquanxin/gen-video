@@ -13,6 +13,8 @@ export type GenerationMode = 'text-to-video' | 'image-to-video';
 // 表单状态
 export interface FormState {
   mode: GenerationMode;
+  title: string;
+  description: string;
   prompt: string;
   imageUrl: string | null;
   endImageUrl: string | null;
@@ -28,11 +30,13 @@ export interface FormState {
 // 默认表单状态
 export const defaultFormState: FormState = {
   mode: 'text-to-video',
+  title: '',
+  description: '',
   prompt: '',
   imageUrl: null,
   endImageUrl: null,
   aspectRatio: '16:9',
-  resolution: '720p',
+  resolution: '480p',
   duration: 5,
   cameraFixed: false,
   seed: -1,
