@@ -115,7 +115,8 @@ export default function Home() {
     try {
       const result = await api.generate({
         mode: form.mode,
-        title: form.title,
+        theme: form.theme,
+        shot: form.shot,
         description: form.description,
         prompt: form.prompt,
         image_url: form.imageUrl,
@@ -154,7 +155,8 @@ export default function Home() {
     // 回填表单参数
     setFormState({
       mode: (record.mode as FormState['mode']) || 'text-to-video',
-      title: record.title || '',
+      theme: record.theme || '',
+      shot: record.shot || '',
       description: record.description || '',
       prompt: record.prompt || '',
       imageUrl: record.image_url || null,

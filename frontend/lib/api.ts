@@ -2,7 +2,8 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
 export interface GenerateRequest {
   mode: 'text-to-video' | 'image-to-video';
-  title: string;
+  theme: string;
+  shot: string;
   description: string;
   prompt: string;
   image_url?: string | null;
@@ -34,7 +35,8 @@ export interface HistoryRecord {
   task_id: string;
   status?: string;
   mode: string;
-  title?: string;
+  theme?: string;
+  shot?: string;
   description?: string;
   prompt: string;
   image_url?: string | null;

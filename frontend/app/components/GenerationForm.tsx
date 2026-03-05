@@ -45,14 +45,24 @@ export default function GenerationForm({ onSubmit, isGenerating, initialState }:
 
   return (
     <form onSubmit={handleSubmit} className="space-y-3 bg-white p-4 rounded-lg shadow text-sm">
-      {/* 分镜标题和描述 */}
-      <div className="grid grid-cols-2 gap-3">
+      {/* 主题、分镜、修改说明 */}
+      <div className="grid grid-cols-3 gap-2">
         <div>
-          <label className="block text-xs font-medium text-gray-700 mb-1">分镜标题</label>
+          <label className="block text-xs font-medium text-gray-700 mb-1">主题</label>
           <input
             type="text"
-            value={formState.title}
-            onChange={(e) => updateField('title', e.target.value)}
+            value={formState.theme}
+            onChange={(e) => updateField('theme', e.target.value)}
+            placeholder="如：产品宣传片"
+            className="w-full px-2 py-1.5 border border-gray-300 rounded text-sm"
+          />
+        </div>
+        <div>
+          <label className="block text-xs font-medium text-gray-700 mb-1">分镜</label>
+          <input
+            type="text"
+            value={formState.shot}
+            onChange={(e) => updateField('shot', e.target.value)}
             placeholder="如：A镜-开场"
             className="w-full px-2 py-1.5 border border-gray-300 rounded text-sm"
           />
@@ -63,7 +73,7 @@ export default function GenerationForm({ onSubmit, isGenerating, initialState }:
             type="text"
             value={formState.description}
             onChange={(e) => updateField('description', e.target.value)}
-            placeholder="如：调整了镜头运动"
+            placeholder="如：调整镜头运动"
             className="w-full px-2 py-1.5 border border-gray-300 rounded text-sm"
           />
         </div>
