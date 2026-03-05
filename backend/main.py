@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 import os
 
 # 加载环境变量
-load_dotenv()
+load_dotenv(override=True)
 
 # 导入路由
 from routers import generate, status, history, videos

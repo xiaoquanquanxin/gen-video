@@ -26,17 +26,19 @@ class VideoGenerator:
     IMAGE_TO_VIDEO_MODEL = "doubao-seedance-1-5-pro-251215"
     
     def __init__(self):
-        self.api_key = os.environ.get("ARK_API_KEY")
         self.base_url = "https://ark.cn-beijing.volces.com/api/v3"
     
     def _check_api_key(self):
-        if not self.api_key or self.api_key == "your_api_key_here":
+        api_key = os.environ.get("ARK_API_KEY")
+        if not api_key or api_key == "your_api_key_here":
             raise ValueError("ARK_API_KEY 环境变量未配置")
+        return api_key
 
     def _get_headers(self) -> dict:
+        api_key = self._check_api_key()
         return {
             "Content-Type": "application/json",
-            "Authorization": f"Bearer {self.api_key}"
+            "Authorization": f"Bearer {api_key}"
         }
     
     def _to_data_url(self, image_data: str) -> str:
