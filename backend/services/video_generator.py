@@ -39,22 +39,13 @@ class VideoGenerator:
             "Authorization": f"Bearer {self.api_key}"
         }
     
-    def _to_data_url(self, image_url: str) -> str:
-        """将本地图片 URL 转为 base64 data URL"""
-        if image_url.startswith("data:"):
-            return image_url
-        # 本地上传的图片，从文件系统读取
-        if "localhost" in image_url or "127.0.0.1" in image_url:
-            # 从 URL 提取文件名: http://localhost:8000/uploads/xxx.jpg -> ../uploads/xxx.jpg
-            filename = image_url.split("/uploads/")[-1]
-            filepath = os.path.join("../uploads", filename)
-            if os.path.exists(filepath):
-                with open(filepath, "rb") as f:
-                    data = base64.b64encode(f.read()).decode()
-                ext = filename.rsplit(".", 1)[-1].lower()
-                mime = {"jpg": "image/jpeg", "jpeg": "image/jpeg", "png": "image/png", "webp": "image/webp"}.get(ext, "image/jpeg")
-                return f"data:{mime};base64,{data}"
-        return image_url
+    def _to_data_url(self, image_data: str) -> str:
+        """确保图片数据是 base64 data URL 格式"""
+        # 前端已经转成 base64 data URL，直接返回
+        if image_data.startswith("data:"):
+            return image_data
+        # 兼容旧格式：如果是普通 URL，返回原样（API 可能支持）
+        return image_data
 
     def _build_content(self, params: GenerationParams) -> list:
         """构建请求内容"""

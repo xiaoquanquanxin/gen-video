@@ -49,30 +49,7 @@ export interface HistoryResponse {
   records: HistoryRecord[];
 }
 
-export interface UploadResponse {
-  success: boolean;
-  url?: string;
-  error?: string;
-}
-
 export const api = {
-  async upload(file: File): Promise<UploadResponse> {
-    const formData = new FormData();
-    formData.append('file', file);
-    
-    const response = await fetch(`${API_BASE_URL}/api/upload`, {
-      method: 'POST',
-      body: formData,
-    });
-    
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.detail || '上传失败');
-    }
-    
-    return response.json();
-  },
-
   async generate(params: GenerateRequest): Promise<GenerateResponse> {
     const response = await fetch(`${API_BASE_URL}/api/generate`, {
       method: 'POST',

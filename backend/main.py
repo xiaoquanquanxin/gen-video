@@ -1,6 +1,5 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.staticfiles import StaticFiles
 from dotenv import load_dotenv
 import os
 
@@ -8,7 +7,7 @@ import os
 load_dotenv()
 
 # 导入路由
-from routers import upload, generate, status, history, videos
+from routers import generate, status, history, videos
 
 app = FastAPI(title="Seedance Video API", version="1.0.0")
 
@@ -22,15 +21,10 @@ app.add_middleware(
 )
 
 # 注册路由
-app.include_router(upload.router)
 app.include_router(generate.router)
 app.include_router(status.router)
 app.include_router(history.router)
 app.include_router(videos.router)
-
-# 静态文件服务（用于上传的图片）
-os.makedirs("../uploads", exist_ok=True)
-app.mount("/uploads", StaticFiles(directory="../uploads"), name="uploads")
 
 @app.get("/")
 async def root():

@@ -1,18 +1,17 @@
 'use client';
 
 import { useState, useRef } from 'react';
-import { api } from '@/lib/api';
 
 interface ImageUploaderProps {
-  value: string | null;
-  onChange: (url: string | null) => void;
+  value: string | null;  // base64 data URL
+  onChange: (dataUrl: string | null) => void;
 }
 
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 const MAX_SIZE = 10 * 1024 * 1024; // 10MB
 
 export default function ImageUploader({ value, onChange }: ImageUploaderProps) {
-  const [isUploading, setIsUploading] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -27,7 +26,16 @@ export default function ImageUploader({ value, onChange }: ImageUploaderProps) {
     return null;
   };
 
-  const uploadFile = async (file: File) => {
+  const fileToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  };
+
+  const processFile = async (file: File) => {
     const validationError = validateFile(file);
     if (validationError) {
       setError(validationError);
@@ -35,32 +43,28 @@ export default function ImageUploader({ value, onChange }: ImageUploaderProps) {
     }
 
     setError(null);
-    setIsUploading(true);
+    setIsProcessing(true);
 
     try {
-      const result = await api.upload(file);
-      if (result.success && result.url) {
-        onChange(result.url);
-      } else {
-        setError(result.error || '上传失败');
-      }
+      const dataUrl = await fileToBase64(file);
+      onChange(dataUrl);
     } catch (err) {
-      setError(err instanceof Error ? err.message : '上传失败');
+      setError('图片处理失败');
     } finally {
-      setIsUploading(false);
+      setIsProcessing(false);
     }
   };
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) uploadFile(file);
+    if (file) processFile(file);
   };
 
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     setIsDragging(false);
     const file = e.dataTransfer.files[0];
-    if (file) uploadFile(file);
+    if (file) processFile(file);
   };
 
   const handleDragOver = (e: React.DragEvent) => {
@@ -107,8 +111,8 @@ export default function ImageUploader({ value, onChange }: ImageUploaderProps) {
           isDragging ? 'border-blue-500 bg-blue-50' : 'border-gray-300 hover:border-gray-400'
         }`}
       >
-        {isUploading ? (
-          <span className="text-gray-500">上传中...</span>
+        {isProcessing ? (
+          <span className="text-gray-500">处理中...</span>
         ) : (
           <>
             <span className="text-gray-500">点击或拖拽上传图片</span>
