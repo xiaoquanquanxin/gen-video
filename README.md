@@ -27,7 +27,7 @@ ARK_API_KEY=your_volcengine_ark_api_key
 
 前端 (`frontend/.env.local`):
 ```
-NEXT_PUBLIC_API_URL=http://localhost:8000
+NEXT_PUBLIC_API_URL=http://localhost:8765
 ```
 
 ### 2. 安装依赖
@@ -46,13 +46,13 @@ npm install
 
 ### 3. 启动服务
 
-后端 (端口 8000):
+后端 (端口 8765):
 ```bash
 cd backend
-uvicorn main:app --reload --host 0.0.0.0 --port 8000
+uvicorn main:app --reload --port 8765
 ```
 
-前端 (端口 3000):
+前端 (端口 3456):
 ```bash
 cd frontend
 npm run dev
@@ -60,7 +60,7 @@ npm run dev
 
 ### 4. 访问应用
 
-打开浏览器访问 http://localhost:3000
+打开浏览器访问 http://localhost:3456
 
 ## 项目结构
 
